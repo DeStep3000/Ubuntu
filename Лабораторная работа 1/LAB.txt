@@ -31,7 +31,7 @@ echo "-------------------------------------------------------"
 exit
 fi
 usage=$(df -h /home/destep/LOG --output=pcent|sed 's/%//g'| sed 's/ //g'| sed 's/Использовано//g'|sed '1d')
-number=$(( &number + 1 ))
+number=$(( $number + 1 ))
 echo "The 'LOG' folder fullness as a percentage: $usage"
 echo "-------------------------------------------------------"
 if [ $usage -gt $var ] 
