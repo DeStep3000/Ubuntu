@@ -2,7 +2,6 @@
 var=30
 N=10
 flag=0
-M=$(( $N + 1 ))
 echo "-------------------------------------------------------"
 if [ ! -d "/home/destep/LOG" ]
 then
@@ -17,14 +16,22 @@ echo "-------------------------------------------------------"
 exit
 fi 
 number=$(ls -l /home/destep/LOG | wc | awk '{print $1}')
+number=$(( $number - 1 ))
 echo "Number of files in 'LOG' folder is $number"
-if [ $number -lt $M ]
+if [ $number -lt $N ]
 then
 echo "Number of files in 'LOG' folder is less than $N"
 flag=1
 fi
 echo "-------------------------------------------------------"
+if [ $number -eq 0 ]
+then
+echo "You don't have any files in the LOG folder"
+echo "-------------------------------------------------------"
+exit
+fi
 usage=$(df -h /home/destep/LOG --output=pcent|sed 's/%//g'| sed 's/ //g'| sed 's/Использовано//g'|sed '1d')
+number=$(( &number + 1 ))
 echo "The 'LOG' folder fullness as a percentage: $usage"
 echo "-------------------------------------------------------"
 if [ $usage -gt $var ] 
