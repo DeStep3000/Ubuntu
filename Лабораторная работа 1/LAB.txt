@@ -45,6 +45,7 @@ rm $files
 echo "-------------------------------------------------------"
 else
 files=$(find /home/destep/LOG -type f -printf '%t+%p\n' | sort -nrk1 |head -n $number| awk '{print $5}' | sed 's/2023+//g' | tr '\n' ' ')
+number=$(( $number - 1 ))
 echo "Archive $number files in the 'BACKUP' folder"
 tar -czvf /home/destep/BACKUP/archive.tar.gz $files
 rm $files
