@@ -1,0 +1,46 @@
+#!/bin/bash
+var=30
+N=10
+flag=0
+M=$(( $N + 1 ))
+echo "-------------------------------------------------------"
+if [ ! -d "/home/destep/LOG" ]
+then
+echo "There is no 'LOG' folder"
+echo "-------------------------------------------------------"
+exit
+fi
+if [ ! -d "/home/destep/BACKUP" ]
+then
+echo "There is no 'BACKUP' folder"
+echo "-------------------------------------------------------"
+exit
+fi 
+number=$(ls -l /home/destep/LOG | wc | awk '{print $1}')
+echo "Number of files in 'LOG' folder is $number"
+if [ $number -lt $M ]
+then
+echo "Number of files in 'LOG' folder is less than $N"
+flag=1
+fi
+echo "-------------------------------------------------------"
+usage=$(df -h /home/destep/LOG --output=pcent|sed 's/%//g'| sed 's/ //g'| sed 's/Использовано//g'|sed '1d')
+echo "The 'LOG' folder fullness as a percentage: $usage"
+echo "-------------------------------------------------------"
+if [ $usage -gt $var ] 
+then
+if [ $flag -eq 0 ]
+then
+files=$(find /home/destep/LOG -type f -printf '%t+%p\n' | sort -nrk1 |head -n $N| awk '{print $5}' | sed 's/2023+//g' | tr '\n' ' ')
+echo "Archive $N files in the 'BACKUP' folder"
+tar -czvf /home/destep/BACKUP/archive.tar.gz $files
+rm $files
+echo "-------------------------------------------------------"
+else
+files=$(find /home/destep/LOG -type f -printf '%t+%p\n' | sort -nrk1 |head -n $number| awk '{print $5}' | sed 's/2023+//g' | tr '\n' ' ')
+echo "Archive $number files in the 'BACKUP' folder"
+tar -czvf /home/destep/BACKUP/archive.tar.gz $files
+rm $files
+echo "-------------------------------------------------------"
+fi
+fi
